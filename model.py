@@ -21,7 +21,7 @@ def model(img_size, num_class):
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(num_class))
-    model.add(Activation('sigmoid'))
+    model.add(Activation('softmax'))
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
