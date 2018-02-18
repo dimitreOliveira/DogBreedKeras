@@ -1,7 +1,7 @@
-#Deep Learning practice example
+#Deep Learning image classification with Keras
 
-###Titanic: Machine Learning from Disaster
+###Dog Breed Identification: Determine the breed of a dog in an image
 
-link for the kaggle competition: https://www.kaggle.com/c/titanic
+link for the kaggle competition: https://www.kaggle.com/c/dog-breed-identification
 
-datasets: https://www.kaggle.com/c/titanic/data
+datasets: https://www.kaggle.com/c/dog-breed-identification/data
