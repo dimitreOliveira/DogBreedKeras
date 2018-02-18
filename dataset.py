@@ -1,34 +1,93 @@
 import cv2
+import h5py
+import os.path
 import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
 def load_train_dataset(df_train, img_size):
-    x_train = []
-    for f, breed in tqdm(df_train.values):
-        img = cv2.imread('data/train/{}.jpg'.format(f))
-        x_train.append(cv2.resize(img, (img_size, img_size)))
+    file_path = 'data/x_train.h5'
+
+    if os.path.exists(file_path):
+        with h5py.File(file_path, 'r') as hf:
+            x_train = hf['x_train'][:]
+
+    else:
+        x_train = []
+        for f, breed in tqdm(df_train.values):
+            img = cv2.imread('data/train/{}.jpg'.format(f))
+            x_train.append(cv2.resize(img, (img_size, img_size)))
+
+        with h5py.File(file_path, 'w') as hf:
+            hf.create_dataset("x_train", data=x_train)
 
     return x_train
 
 
 def load_test_dataset(df_test, img_size):
-    x_test = []
-    for f in tqdm(df_test['id'].values):
-        img = cv2.imread('data/test/{}.jpg'.format(f))
-        x_test.append(cv2.resize(img, (img_size, img_size)))
+    file_path = 'data/x_test.h5'
+
+    if os.path.exists(file_path):
+        with h5py.File(file_path, 'r') as hf:
+            x_test = hf['x_test'][:]
+
+    else:
+        x_test = []
+        for f in tqdm(df_test['id'].values):
+            img = cv2.imread('data/test/{}.jpg'.format(f))
+            x_test.append(cv2.resize(img, (img_size, img_size)))
+
+        with h5py.File(file_path, 'w') as hf:
+            hf.create_dataset("x_test", data=x_test)
 
     return x_test
 
 
 def load_train_labels(df_train, one_hot_labels):
-    y_train = []
-    for i in tqdm(range(len(df_train.values))):
-        label = one_hot_labels[i]
-        y_train.append(label)
+    file_path = 'data/y_train.h5'
+
+    if os.path.exists(file_path):
+        with h5py.File(file_path, 'r') as hf:
+            y_train = hf['y_train'][:]
+
+    else:
+        y_train = []
+        for i in tqdm(range(len(df_train.values))):
+            label = one_hot_labels[i]
+            y_train.append(label)
+
+        with h5py.File(file_path, 'w') as hf:
+            hf.create_dataset("y_train", data=y_train)
 
     return y_train
+
+
+# def load_train_dataset(df_train, img_size):
+#     x_train = []
+#     for f, breed in tqdm(df_train.values):
+#         img = cv2.imread('data/train/{}.jpg'.format(f))
+#         x_train.append(cv2.resize(img, (img_size, img_size)))
+#
+#     return x_train
+#
+#
+# def load_test_dataset(df_test, img_size):
+#     x_test = []
+#     for f in tqdm(df_test['id'].values):
+#         img = cv2.imread('data/test/{}.jpg'.format(f))
+#         x_test.append(cv2.resize(img, (img_size, img_size)))
+#
+#     return x_test
+#
+#
+# def load_train_labels(df_train, one_hot_labels):
+#     y_train = []
+#     for i in tqdm(range(len(df_train.values))):
+#         label = one_hot_labels[i]
+#         y_train.append(label)
+#
+#     return y_train
 
 
 def plot_loss_accuracy(history):

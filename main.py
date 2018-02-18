@@ -19,8 +19,8 @@ one_hot = pd.get_dummies(targets_series, sparse=True)
 one_hot_labels = np.asarray(one_hot)
 
 x_train = load_train_dataset(df_train, IMG_SIZE)
-y_train = load_train_labels(df_train, one_hot_labels)
 x_test = load_test_dataset(df_test, IMG_SIZE)
+y_train = load_train_labels(df_train, one_hot_labels)
 
 x_train_raw = np.array(x_train, np.float32) / 255.
 x_test = np.array(x_test, np.float32) / 255.
