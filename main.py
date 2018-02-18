@@ -5,9 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
-from keras.applications.vgg19 import VGG19
-from keras.models import Model, Sequential
-from keras.layers import Dense, Dropout, Flatten, Convolution2D, Activation, MaxPooling2D
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten, Convolution2D, Activation, MaxPooling2D, Conv2D
 
 df_train = pd.read_csv('data2/labels.csv')
 df_test = pd.read_csv('data2/sample_submission.csv')
@@ -18,7 +17,7 @@ one_hot = pd.get_dummies(targets_series, sparse=True)
 one_hot_labels = np.asarray(one_hot)
 
 im_size = 48
-epochs = 6
+epochs = 1
 batch_size = 64
 
 x_train = []
@@ -49,34 +48,16 @@ num_class = y_train_raw.shape[1]
 
 X_train, X_valid, Y_train, Y_valid = train_test_split(x_train_raw, y_train_raw, test_size=0.3, random_state=1)
 
-# Create the base pre-trained model
-# Can't download weights in the kernel
-base_model = VGG19(  # weights='imagenet',
-    weights=None, include_top=False, input_shape=(im_size, im_size, 3))
-
-# Add a new top layer
-x = base_model.output
-x = Flatten()(x)
-predictions = Dense(num_class, activation='softmax')(x)
-
-# This is the model we will train
-# model = Model(inputs=base_model.input, outputs=predictions)
-#
-# # First: train only the top layers (which were randomly initialized)
-# for layer in base_model.layers:
-#     layer.trainable = False
-
-
 model = Sequential()
-model.add(Convolution2D(32, 3, 3, input_shape=(im_size, im_size, 3)))
+model.add(Conv2D(32, (3, 3), input_shape=(im_size, im_size, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Convolution2D(32, 3, 3))
+model.add(Conv2D(32, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Convolution2D(64, 3, 3))
+model.add(Conv2D(64, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -94,13 +75,13 @@ callbacks_list = [keras.callbacks.EarlyStopping(monitor='val_acc', patience=3, v
 # print(model.summary())
 
 # load pre-trained weights
-model.load_weights('models/basic_cnn.h5')
-print('model loaded')
+# model.load_weights('models/model.h5')
+# print('model loaded')
 
 history = model.fit(X_train, Y_train, validation_data=(X_valid, Y_valid), epochs=epochs, batch_size=batch_size
                     , verbose=1)
 
-model.save_weights('models/basic_cnn.h5')
+model.save_weights('models/model.h5')
 print('model saved')
 
 preds = model.predict(x_test, batch_size=batch_size, verbose=1)
@@ -113,9 +94,9 @@ submission.columns = col_names
 submission.insert(0, 'id', df_test['id'])
 
 submission.to_csv('submissions/submission.csv', encoding='utf-8', index=False)
+print('submission outputed')
 
 
-print(history.history.keys())
 plt.figure(1)
 
 # summarize history for accuracy
