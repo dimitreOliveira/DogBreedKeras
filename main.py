@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
-from model import model
 from dataset import plot_loss_accuracy, output_submission, load_train_dataset, load_test_dataset, load_train_labels
+from model import model
 
 
 # global variables
-IMG_SIZE = 48
-EPOCHS = 4
+IMG_SIZE = 100
+EPOCHS = 10
 BATCH_SIZE = 64
 
 
@@ -35,31 +35,31 @@ print(x_test.shape)
 
 X_train, X_valid, Y_train, Y_valid = train_test_split(x_train_raw, y_train_raw, test_size=0.3, random_state=1)
 
-model = model(IMG_SIZE, NUM_CLASS)
-
-# load pre-trained weights
-# model.load_weights('models/model.h5')
-# print('model loaded')
-
 datagen = ImageDataGenerator(
     featurewise_center=False,  # set input mean to 0 over the dataset
     samplewise_center=False,  # set each sample mean to 0
     featurewise_std_normalization=False,  # divide inputs by std of the dataset
     samplewise_std_normalization=False,  # divide each input by its std
     zca_whitening=False,  # apply ZCA whitening
-    rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
-    width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
-    height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
-    horizontal_flip=True,  # randomly flip images
-    vertical_flip=False)  # randomly flip images
+    rotation_range=20,  # randomly rotate images in the range (degrees, 0 to 180)
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    horizontal_flip=True)  # randomly flip images
 
-datagen.fit(X_train)
+# datagen.fit(X_train)
+
+model = model(IMG_SIZE, NUM_CLASS)
+
+# load pre-trained weights
+model.load_weights('models/model.h5')
+print('model loaded')
+
 history = model.fit_generator(datagen.flow(X_train, Y_train, batch_size=BATCH_SIZE),
                               steps_per_epoch=X_train.shape[0] // BATCH_SIZE, epochs=EPOCHS,
-                              validation_data=(X_valid, Y_valid), workers=4, verbose=1)
+                              validation_data=(X_valid, Y_valid), workers=4, verbose=2)
 
-# model.save_weights('models/model.h5')
-# print('model saved')
+model.save_weights('models/model.h5')
+print('model saved')
 
 preds = model.predict(x_test, batch_size=BATCH_SIZE, verbose=1)
 
