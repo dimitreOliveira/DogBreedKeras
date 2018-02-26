@@ -3,12 +3,13 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
 from dataset import plot_loss_accuracy, output_submission, load_train_dataset, load_test_dataset, load_train_labels
-from model import model
+from model import model, tf_model
+from keras.callbacks import ModelCheckpoint, EarlyStopping
 
 
 # global variables
-IMG_SIZE = 100
-EPOCHS = 10
+IMG_SIZE = 60
+EPOCHS = 5
 BATCH_SIZE = 64
 
 
@@ -48,21 +49,33 @@ datagen = ImageDataGenerator(
 
 # datagen.fit(X_train)
 
-model = model(IMG_SIZE, NUM_CLASS)
+# model = model(IMG_SIZE, NUM_CLASS)
+tf_model = tf_model(IMG_SIZE, NUM_CLASS)
 
 # load pre-trained weights
-model.load_weights('models/model.h5')
+tf_model.load_weights('models/vgg16_1.h5')
 print('model loaded')
 
-history = model.fit_generator(datagen.flow(X_train, Y_train, batch_size=BATCH_SIZE),
-                              steps_per_epoch=X_train.shape[0] // BATCH_SIZE, epochs=EPOCHS,
-                              validation_data=(X_valid, Y_valid), workers=4, verbose=2)
+# Save the model according to the conditions
+checkpoint = ModelCheckpoint("models/vgg16_1.h5", monitor='val_acc', verbose=1, save_best_only=True,
+                             save_weights_only=False, mode='auto', period=1)
+early = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=1, mode='auto')
 
-model.save_weights('models/model.h5')
+
+# history = model.fit_generator(datagen.flow(X_train, Y_train, batch_size=BATCH_SIZE),
+#                               steps_per_epoch=X_train.shape[0] // BATCH_SIZE, epochs=EPOCHS,
+#                               validation_data=(X_valid, Y_valid), workers=4, verbose=2)
+
+tf_history = tf_model.fit_generator(datagen.flow(X_train, Y_train, batch_size=BATCH_SIZE),
+                              steps_per_epoch=X_train.shape[0] // BATCH_SIZE, epochs=EPOCHS,
+                              validation_data=(X_valid, Y_valid), workers=4, verbose=2, callbacks=[checkpoint, early])
+
+tf_model.save_weights('models/model.h5')
 print('model saved')
 
-preds = model.predict(x_test, batch_size=BATCH_SIZE, verbose=1)
+preds = tf_model.predict(x_test, batch_size=BATCH_SIZE, verbose=1)
 
 output_submission(preds, one_hot, df_test)
 
-plot_loss_accuracy(history)
+# plot_loss_accuracy(history)
+plot_loss_accuracy(tf_history)

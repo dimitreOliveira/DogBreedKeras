@@ -1,7 +1,8 @@
-from keras.models import Sequential
+from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Flatten, Activation, MaxPooling2D, Conv2D
 from keras import optimizers
 from keras import regularizers
+from keras import applications
 
 
 def model(img_size, num_class):
@@ -29,3 +30,28 @@ def model(img_size, num_class):
     model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
     return model
+
+
+def tf_model(img_size, num_class):
+    model = applications.VGG19(weights="imagenet", include_top=False, input_shape=(img_size, img_size, 3))
+
+    # Freeze the layers which you don't want to train. Here I am freezing all layers.
+    for layer in model.layers:
+        layer.trainable = False
+
+    # Adding custom Layers
+    x = model.output
+    x = Flatten()(x)
+    x = Dense(1024, activation="relu")(x)
+    x = Dropout(0.5)(x)
+    x = Dense(1024, activation="relu")(x)
+    predictions = Dense(num_class, activation="softmax")(x)
+
+    # creating the final model
+    model_final = Model(input=model.input, output=predictions)
+
+    adam = optimizers.adam(lr=0.001, beta_1=0.9, beta_2=0.999)
+    # compile the model
+    model_final.compile(loss="categorical_crossentropy", optimizer=adam, metrics=["accuracy"])
+
+    return model_final
