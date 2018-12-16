@@ -1,4 +1,4 @@
-![](https://kaggle2.blob.core.windows.net/competitions/kaggle/3333/media/border_collies.png)
+![](https://raw.githubusercontent.com/dimitreOliveira/DogBreedKeras/master/dog_breed_identification_header.png)
 
 # Deep Learning image classification with Keras
 
