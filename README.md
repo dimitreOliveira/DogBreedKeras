@@ -2,6 +2,14 @@
 
 # Deep Learning image classification with Keras
 
+## About the repository
+The goal here is use the Tensorflow API and create a end-to-end project, from data loading to model predictions, and use the Kaggle "New York City Taxi Fare Prediction competition" as the data source.
+
+### What you will find
+* Load and process image data to save as numpy matrices. [[link]](https://github.com/dimitreOliveira/DogBreedKeras/blob/master/dataset.py)
+* Model architecture. [[link]](https://github.com/dimitreOliveira/DogBreedKeras/blob/master/model.py)
+* Model training and prediction. [[link]](https://github.com/dimitreOliveira/DogBreedKeras/blob/master/main.py)
+
 ### Dog Breed Identification: Determine the breed of a dog in an image
 
 link for the kaggle competition: https://www.kaggle.com/c/dog-breed-identification
@@ -15,3 +23,16 @@ In this playground competition, you are provided a strictly canine subset of Ima
 
 ### Acknowledgments
 We extend our gratitude to the creators of the Stanford Dogs Dataset for making this competition possible: Aditya Khosla, Nityananda Jayadevaprakash, Bangpeng Yao, and Fei-Fei Li.
+
+### Dependencies:
+* [cv2](https://opencv-python-tutroals.readthedocs.io/en/latest/index.html)
+* [h5py](https://www.h5py.org/)
+* [tqdm](https://tqdm.github.io/)
+* [keras](https://keras.io/)
+* [numpy](http://www.numpy.org/)
+* [pandas](http://pandas.pydata.org/)
+* [sklearn](https://scikit-learn.org/stable/)
+* [matplotlib](http://matplotlib.org/)
+
+### To-Do:
+* Efficiently use transfer learning to improve model predictions.
