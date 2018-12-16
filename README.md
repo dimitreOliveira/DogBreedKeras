@@ -3,7 +3,7 @@
 # Deep Learning image classification with Keras
 
 ## About the repository
-The goal here is use the Tensorflow API and create a end-to-end project, from data loading to model predictions, and use the Kaggle "New York City Taxi Fare Prediction competition" as the data source.
+The goal here is to practice with deep learning and images, in this case using CNNs and image transfer, the challenge here is the small dataset, the high number of classes and unbalanced data.
 
 ### What you will find
 * Load and process image data to save as numpy matrices. [[link]](https://github.com/dimitreOliveira/DogBreedKeras/blob/master/dataset.py)
