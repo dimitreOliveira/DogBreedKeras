@@ -25,14 +25,14 @@ In this playground competition, you are provided a strictly canine subset of Ima
 We extend our gratitude to the creators of the Stanford Dogs Dataset for making this competition possible: Aditya Khosla, Nityananda Jayadevaprakash, Bangpeng Yao, and Fei-Fei Li.
 
 ### Dependencies:
-* [cv2](https://opencv-python-tutroals.readthedocs.io/en/latest/index.html)
-* [h5py](https://www.h5py.org/)
-* [tqdm](https://tqdm.github.io/)
-* [keras](https://keras.io/)
-* [numpy](http://www.numpy.org/)
-* [pandas](http://pandas.pydata.org/)
-* [sklearn](https://scikit-learn.org/stable/)
-* [matplotlib](http://matplotlib.org/)
+* [Cv2](https://opencv-python-tutroals.readthedocs.io/en/latest/index.html)
+* [H5Py](https://www.h5py.org/)
+* [Tqdm](https://tqdm.github.io/)
+* [Keras](https://keras.io/)
+* [NumPy](http://www.numpy.org/)
+* [Pandas](http://pandas.pydata.org/)
+* [Sklearn](https://scikit-learn.org/stable/)
+* [Matplotlib](http://matplotlib.org/)
 
 ### To-Do:
 * Efficiently use transfer learning to improve model predictions.
